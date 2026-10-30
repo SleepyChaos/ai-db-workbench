@@ -1,0 +1,36 @@
+name: Check skeleton
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install Rust
+        run: rustup toolchain install 1.98.0 --profile minimal --component rustfmt --component clippy && rustup default 1.98.0
+      - name: Frontend
+        working-directory: web
+        run: npm ci --ignore-scripts && npm run build
+      - name: Pi bridge
+        working-directory: agent
+        run: npm ci --ignore-scripts && npm run check && npm test
+      - name: Rust checks
+        working-directory: server
+        run: cargo fmt --check && cargo test --locked && cargo clippy --locked --all-targets -- -D warnings && cargo build --locked
+      - name: End-to-end integration (test-only model API)
+        run: node scripts/integration.mjs
+      - name: Docker Compose smoke
+        run: docker compose up --build -d --wait && node scripts/smoke.mjs
+      - name: Container diagnostics
+        if: failure()
+        run: docker compose ps && docker compose logs --tail=80
+      - name: Stop containers
+        if: always()
+        run: docker compose down
