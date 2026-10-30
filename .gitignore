@@ -18,3 +18,5 @@ local-data/
 *.log
 *.pem
 *.key
+
+fixtures/local/

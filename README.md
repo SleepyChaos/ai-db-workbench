@@ -59,6 +59,7 @@ MySQL、MongoDB、Redis、Apache Cassandra、Neo4j、InfluxDB、Elasticsearch、
 - [验收标准与交付顺序](docs/acceptance.md)
 - [技术设计约束与待定项](docs/technical-decisions.md)
 - [Pi 接入与 Docker Compose 部署设计](docs/pi-and-deployment.md)
+- [公开数据库测试数据与本地下载](fixtures/README.md)
 
 ## 技术方案
 
