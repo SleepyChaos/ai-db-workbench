@@ -25,14 +25,27 @@ MySQL、MongoDB、Redis、Apache Cassandra、Neo4j、InfluxDB、Elasticsearch、
 - [逐库能力矩阵](docs/database-capabilities.md)
 - [验收标准与交付顺序](docs/acceptance.md)
 - [技术设计约束与待定项](docs/technical-decisions.md)
+- [Pi 接入与 Docker Compose 部署设计](docs/pi-and-deployment.md)
+
+## 技术方案
+
+- 后端：Rust，采用 Axum + Tokio，负责数据库适配、文件导入、执行与记录。
+- 前端：Vue 3 + Vite + TypeScript，两个页面的轻量 Web 应用。
+- Agent：直接使用 [Pi](https://github.com/earendil-works/pi) 的 TypeScript 库，在一个薄 Node.js 服务中运行；不重写 Agent 循环。
+- 部署：Docker Compose 项目网络。Rust 提供 API 和 Vue 构建产物，Pi 服务仅通过项目网络访问，保留访问模型 API 的出站能力。
+
+以上是已选定的实现方向，当前尚未提供应用代码、镜像或可运行的 Compose 配置。
 
 ## 开发状态
 
 - [x] 明确目标用户、页面职责与首版数据库范围。
 - [x] 记录逐库能力边界与验收标准。
-- [ ] 确定技术栈、部署形态、数据库版本和模型接入方式。
+- [x] 确定 Rust、Vue、Pi 与 Docker Compose 的实现方向。
+- [ ] 固定依赖和数据库版本，选择模型提供方。
 - [ ] 实现连接管理、元数据浏览和原生执行框架。
 - [ ] 完成九种数据库适配与真实集成验证。
 - [ ] 完成 AI 对话、文件导入与操作恢复流程。
 
-尚未选择开源许可证；公开仓库不代表已授予开源使用许可。
+## 许可证
+
+本项目采用 [MIT License](LICENSE)。第三方代码与依赖遵循各自许可证，详见 [第三方声明](THIRD_PARTY_NOTICES.md)。Pi 的原始 MIT 版权和许可文本单独保留，不以本项目版权替代。
